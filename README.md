@@ -1,17 +1,24 @@
-# Spamhaus DROP for Little Snitch
+# Spamhaus DROP for LS
 
-This repository publishes the official Spamhaus DROP IPv4 and IPv6 CIDR lists in a format Little Snitch can consume.
+This repository republishes the official Spamhaus DROP IPv4 and IPv6 CIDR lists for use as LS blocklists.
 
-The GitHub Action runs daily, downloads the fixed official Spamhaus JSON feeds, validates global CIDRs, and updates these files only when their contents change:
+## Add the lists to LS
 
-- `drop_v4.txt`
-- `drop_v6.txt`
-
-Use these URLs in Little Snitch after the first workflow run:
+Add each URL separately in the **Blocklists** section:
 
 ```text
-https://raw.githubusercontent.com/radianghost/spamhaus-little-snitch/main/drop_v4.txt
-https://raw.githubusercontent.com/radianghost/spamhaus-little-snitch/main/drop_v6.txt
+https://raw.githubusercontent.com/radianghost/droplist-ls/main/drop_v4.txt
+https://raw.githubusercontent.com/radianghost/droplist-ls/main/drop_v6.txt
 ```
 
-The repository is public because Little Snitch needs to download the lists without GitHub authentication. Spamhaus asks users not to fetch its DROP feeds more than once per day.
+These are plain CIDR blocklists. Do not add them as a Remote Rule Group, which expects a different `.lsrules` JSON format.
+
+## Updates
+
+The GitHub Action checks once daily at 06:17 UTC, but downloads and publishes only once every continuous three days. A manual Action run updates immediately.
+
+Before publishing, the updater validates the official Spamhaus data and accepts only global IPv4 and IPv6 CIDR ranges. The two files are changed only when their contents differ.
+
+## Privacy
+
+The repository is public because LS needs to download these files without GitHub authentication. It contains no subscriber information or credentials.
