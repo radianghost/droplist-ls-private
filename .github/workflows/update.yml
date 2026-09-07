@@ -3,7 +3,9 @@ name: Update Spamhaus DROP lists
 on:
   workflow_dispatch:
   schedule:
-    - cron: "20 10 * * *"
+    # GitHub schedules use UTC. The daily trigger lets the next step maintain
+    # a continuous three-day cadence across month and year boundaries.
+    - cron: "17 6 * * *"
 
 permissions:
   contents: write
@@ -12,15 +14,33 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      # A manual run always updates. Scheduled runs update only on every third
+      # UTC day since the Unix epoch; this does not reset at the start of a month.
+      - name: Decide whether an update is due
+        id: cadence
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] ||              [ $(( $(date -u +%s) / 86400 % 3 )) -eq 0 ]; then
+            echo "run_update=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_update=false" >> "$GITHUB_OUTPUT"
+            echo "No update due today."
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.cadence.outputs.run_update == 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.cadence.outputs.run_update == 'true'
         with:
           python-version: "3.x"
 
       - run: python update.py
+        if: steps.cadence.outputs.run_update == 'true'
 
       - name: Commit changed lists
+        if: steps.cadence.outputs.run_update == 'true'
         run: |
           git add drop_v4.txt drop_v6.txt
 
