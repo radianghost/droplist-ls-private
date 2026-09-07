@@ -21,7 +21,7 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ "$EVENT_NAME" = "workflow_dispatch" ] ||              [ $(( $(date -u +%s) / 86400 % 3 )) -eq 0 ]; then
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] || [ $(( $(date -u +%s) / 86400 % 3 )) -eq 0 ]; then
             echo "run_update=true" >> "$GITHUB_OUTPUT"
           else
             echo "run_update=false" >> "$GITHUB_OUTPUT"
