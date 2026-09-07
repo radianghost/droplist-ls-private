@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish validated Spamhaus DROP CIDRs for Little Snitch."""
+"""Publish validated Spamhaus DROP CIDRs for LS."""
 
 import ipaddress
 import json
@@ -14,7 +14,7 @@ FEEDS = {
 
 
 def fetch(url):
-    request = urllib.request.Request(url, headers={"User-Agent": "spamhaus-little-snitch/1.0"})
+    request = urllib.request.Request(url, headers={"User-Agent": "spamhaus-ls/1.0"})
     with urllib.request.urlopen(request, timeout=30) as response:
         if response.status != 200:
             raise ValueError("unexpected HTTP status %s" % response.status)
