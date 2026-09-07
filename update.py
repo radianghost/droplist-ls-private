@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Publish validated Spamhaus DROP CIDRs for LS."""
 
 import ipaddress
 import json
