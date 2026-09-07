@@ -1,4 +1,4 @@
-name: Update Spamhaus DROP lists
+name: Update DROP lists
 
 on:
   workflow_dispatch:
